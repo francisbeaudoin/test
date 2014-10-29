@@ -1,126 +1,104 @@
-<!--
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Device Properties Example</title>
-    <style>
-      html, body, #map-canvas {
-        height: 80%;
-        margin: 0px;
-        padding: 0px
-      }
-    </style>
-	<script type="text/javascript" charset="utf-8" src="cordova-2.3.0.js"></script>
-	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
-	<script>
-	var currentPosition;
-	
-	var map;
-	// This example adds a marker to indicate the position
-	// of Bondi Beach in Sydney, Australia
-	function initialize() {
-	
-	  var mapOptions = {
-		zoom: 15,
-		center: new google.maps.LatLng(-33.890542, 151.274856)
-	  }
-	  
-	  map = new google.maps.Map(document.getElementById('map-canvas'),
-									mapOptions);
-
-	}
-
-	google.maps.event.addDomListener(window, 'load', initialize);
-
-    </script>
-    <script type="text/javascript" charset="utf-8">
-
-    // Wait for Cordova to load
-    //
-    document.addEventListener("deviceready", onDeviceReady, false);
-
-    var watchID = null;
-
-    // Cordova is ready
-    //
-    function onDeviceReady() {
-        // Throw an error if no update is received every 30 seconds
-        var options = { timeout: 30000, enableHighAccuracy: true };
-        watchID = navigator.geolocation.watchPosition(onSuccess, onError, options);
-		
-    }
-
-    // onSuccess Geolocation
-    //
-    function onSuccess(position) {
-		positionMarker(position.coords.latitude, position.coords.longitude);
-		
-        var element = document.getElementById('geolocation');
-        element.innerHTML = 'Latitude: '  + position.coords.latitude      + '<br />' +
-                            'Longitude: ' + position.coords.longitude     + '<br />' +
-                            '<hr />'      + element.innerHTML;
-    }
-
-    // onError Callback receives a PositionError object
-    //
-    function onError(error) {
-        alert('code: '    + error.code    + '\n' +
-              'message: ' + error.message + '\n');
-    }
-
-	function positionMarker(latitute, longitude)
-	{
-		if(!currentPosition)
-		{
-			var image = 'images/test.gif';
-			currentPosition = new google.maps.Marker({position: {lat: latitute, lng: longitude}, map: map, icon:image }); 
-			map.setCenter({lat: latitute, lng: longitude});
-			console.log('Position marker added');
-		}
-		else
-		{
-			var newPosition = new google.maps.LatLng(latitute, longitude);
-			currentPosition.setPosition(newPosition);
-			console.log('Position changed...');
-		}
-	}
-    </script>
-  </head>
-  <body>
-    <p id="geolocation">Watching geolocation...</p>
-	<div id="map-canvas"></div>
-  </body>
-</html>-->
-
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Device Properties Example</title>
+    <title>Capture Photo</title>
 
     <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
     <script type="text/javascript" charset="utf-8">
 
-	$(function(){
-		document.addEventListener("deviceready", onDeviceReady, false);
-	})
+    var pictureSource;   // picture source
+    var destinationType; // sets the format of returned value
 
-	function onDeviceReady() {
-	  navigator.geolocation.getCurrentPosition(onSuccess, onError);     
-	}
+    // Wait for device API libraries to load
+    //
+    document.addEventListener("deviceready",onDeviceReady,false);
 
-	function onSuccess(position) {
-	  // your callback here 
-		alert("test");
-	}
+    // device APIs are available
+    //
+    function onDeviceReady() {
+        pictureSource=navigator.camera.PictureSourceType;
+        destinationType=navigator.camera.DestinationType;
+    }
 
-	function onError(error) { 
-	  // your callback here
-	  alert("error");
-	}
-	
+    // Called when a photo is successfully retrieved
+    //
+    function onPhotoDataSuccess(imageData) {
+      // Uncomment to view the base64-encoded image data
+      // console.log(imageData);
+
+      // Get image handle
+      //
+      var smallImage = document.getElementById('smallImage');
+
+      // Unhide image elements
+      //
+      smallImage.style.display = 'block';
+
+      // Show the captured photo
+      // The inline CSS rules are used to resize the image
+      //
+      smallImage.src = "data:image/jpeg;base64," + imageData;
+    }
+
+    // Called when a photo is successfully retrieved
+    //
+    function onPhotoURISuccess(imageURI) {
+      // Uncomment to view the image file URI
+      // console.log(imageURI);
+
+      // Get image handle
+      //
+      var largeImage = document.getElementById('largeImage');
+
+      // Unhide image elements
+      //
+      largeImage.style.display = 'block';
+
+      // Show the captured photo
+      // The inline CSS rules are used to resize the image
+      //
+      largeImage.src = imageURI;
+    }
+
+    // A button will call this function
+    //
+    function capturePhoto() {
+      // Take picture using device camera and retrieve image as base64-encoded string
+      navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50,
+        destinationType: destinationType.DATA_URL });
+    }
+
+    // A button will call this function
+    //
+    function capturePhotoEdit() {
+      // Take picture using device camera, allow edit, and retrieve image as base64-encoded string
+      navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 20, allowEdit: true,
+        destinationType: destinationType.DATA_URL });
+    }
+
+    // A button will call this function
+    //
+    function getPhoto(source) {
+      // Retrieve image file location from specified source
+      navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50,
+        destinationType: destinationType.FILE_URI,
+        sourceType: source });
+    }
+
+    // Called if something bad happens.
+    //
+    function onFail(message) {
+      alert('Failed because: ' + message);
+    }
+
     </script>
   </head>
   <body>
-    <p id="geolocation">Test geolocation...</p>
+    <button onclick="capturePhoto();">Capture Photo</button> <br>
+    <button onclick="capturePhotoEdit();">Capture Editable Photo</button> <br>
+    <button onclick="getPhoto(pictureSource.PHOTOLIBRARY);">From Photo Library</button><br>
+    <button onclick="getPhoto(pictureSource.SAVEDPHOTOALBUM);">From Photo Album</button><br>
+    <img style="display:none;width:60px;height:60px;" id="smallImage" src="" />
+    <img style="display:none;" id="largeImage" src="" />
   </body>
 </html>
