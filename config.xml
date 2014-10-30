@@ -6,6 +6,8 @@
         id        = "ca.fbsolutions.testing"
         version   = "1.0.0">
 
+	<preference name="phonegap-version" value="3.6.3" />
+	
     <name>Hello World</name>
 
     <description>
