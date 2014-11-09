@@ -15,8 +15,10 @@
 
 		// Wait for device API libraries to load
 		//
-		document.addEventListener("deviceready", onDeviceReady, false);
-		
+		function onLoad()
+		{
+			document.addEventListener("deviceready", onDeviceReady, false);
+		}
 		var watchID = null;
 		var map = null;
 		var marker = null;
@@ -136,7 +138,7 @@
       
 
   </head>
-  <body >
+  <body onload="onLoad()">
 	<div id="map-canvas"></div>
 	<input type="button" id="btnStart" value="Start run"/>
 	<div style="float:left;width:50%">
