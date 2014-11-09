@@ -63,8 +63,6 @@
 		var deltaLng;
 		
 		function transition(result){
-		
-		
 			var element = document.getElementById('geolocation');
 					
 			element.innerHTML = 'Latitude: '  + result[0]      + '<br />' +
@@ -96,6 +94,10 @@
 			
 			}
 			marker.setPosition(latlng);
+			if(!map.getBounds().contains(marker.getPosition()))
+			{
+				map.setCenter(latlng);
+			}
 			if(i!=numDeltas){
 				i++;
 				setTimeout(moveMarker, delay);
