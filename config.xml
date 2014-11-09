@@ -26,6 +26,7 @@
     
 
     <!-- Customize your app and platform with the preference element. -->
+	<preference name="loglevel" 				  value="DEBUG"/>
     <preference name="phonegap-version"           value="3.6.3" />          <!-- all: current version of PhoneGap -->
     <preference name="orientation"                value="default" />        <!-- all: default means both landscape and portrait are enabled -->
     <preference name="target-device"              value="universal" />      <!-- all: possible values handset, tablet, or universal -->
@@ -42,8 +43,12 @@
     <preference name="android-minSdkVersion"      value="7" />              <!-- android: MIN SDK version supported on the target device. MAX version is blank by default. -->
     <preference name="android-installLocation"    value="auto" />           <!-- android: app install location. 'auto' will choose. 'internalOnly' is device memory. 'preferExternal' is SDCard. -->
 
-    <!-- Plugins -->
 
+    <!-- Plugins -->
+	<feature name="Geolocation">
+		<param name="ios-package" value="CDVLocation" />
+	</feature>
+	
     <!-- Core plugins -->
     <gap:plugin name="org.apache.cordova.battery-status" />
     <gap:plugin name="org.apache.cordova.camera" />
