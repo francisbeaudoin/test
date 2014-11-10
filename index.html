@@ -11,14 +11,10 @@
 	<script type="text/javascript" src="js/json2.js"></script>
 
 	<script type="text/javascript" charset="utf-8">
-	
-
-		// Wait for device API libraries to load
-		//
-		function onLoad()
-		{
+		$(function(){
 			document.addEventListener("deviceready", onDeviceReady, false);
-		}
+		});
+		
 		var watchID = null;
 		var map = null;
 		var marker = null;
