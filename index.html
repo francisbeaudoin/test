@@ -33,7 +33,7 @@
 
 			var mapOptions = {
 				center: new google.maps.LatLng(position[0], position[1]),
-				zoom: 12,
+				zoom: 16,
 				disableDefaultUI: true,
 				mapTypeId: google.maps.MapTypeId.ROADMAP
 			};
@@ -58,21 +58,6 @@
 			}); 
 			
 			map.setCenter({lat: position.coords.latitude, lng: position.coords.longitude});
-			
-			google.maps.event.addListener(marker, "position_changed", function() {
-				  var position = marker.getPosition();
-				  coordinates.push(position);
-				  
-				  var runPath = new google.maps.Polyline({
-					path: coordinates,
-					geodesic: true,
-					strokeColor: '#FF0000',
-					strokeOpacity: 1.0,
-					strokeWeight: 2
-				  });
-
-				  runPath.setMap(map);					  
-			});
 		}
 		// onSuccess Geolocation
 		//
