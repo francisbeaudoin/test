@@ -109,21 +109,6 @@
 				
 				map.setCenter({lat: latitude, lng: longitude});
 				
-				google.maps.event.addListener(marker, "position_changed", function() {
-					  var position = marker.getPosition();
-					  coordinates.push(position);
-					  
-					  var runPath = new google.maps.Polyline({
-						path: coordinates,
-						geodesic: true,
-						strokeColor: '#FF0000',
-						strokeOpacity: 1.0,
-						strokeWeight: 2
-					  });
-
-					  runPath.setMap(map);					  
-				});
-			
 			}
 			else
 			{
@@ -144,7 +129,7 @@
   </head>
   <body onload="onLoad()">
 	<div id="map-canvas"></div>
-	<input type="button" id="btnStart" value="Start run"/>
+	<input type="button" id="btnStart" value="Start tracking"/>
 	<input type="button" id="btnStop" value="Stop run"/>
 	<div style="float:left;width:50%">
 		<h2>Position changed</h2>
@@ -162,7 +147,23 @@
 	$( document ).ready(function() {
 		
 		$("#btnStart").click(
-			function(){  
+			function(){ 
+
+			google.maps.event.addListener(marker, "position_changed", function() {
+				  var position = marker.getPosition();
+				  coordinates.push(position);
+				  
+				  var runPath = new google.maps.Polyline({
+					path: coordinates,
+					geodesic: true,
+					strokeColor: '#FF0000',
+					strokeOpacity: 1.0,
+					strokeWeight: 2
+				  });
+
+				  runPath.setMap(map);					  
+			});			
+			/*
 			var x;
 			$.ajax({
 				type: "GET",
@@ -183,6 +184,7 @@
 					});
 				}
 			});
+			*/
 		});
 	});
   </script>
