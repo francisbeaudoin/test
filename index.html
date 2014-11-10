@@ -102,6 +102,23 @@
 								'Longitude: ' + longitude     + '<br />' +
 								'<hr />'      + element.innerHTML;		
 		}
+		
+		// alert dialog dismissed
+			function alertDismissed() {
+				// do something
+			}
+
+		// Show a custom alertDismissed
+		//
+		function showAlert() {
+			navigator.notification.alert(
+				'Tracking has started',  // message
+				alertDismissed,         // callback
+				'Tracker',            // title
+				'OK'                  // buttonName
+			);
+		}
+	
 		//google.maps.event.addDomListener(window, 'load', onDeviceReady);
     </script>
 
@@ -130,6 +147,8 @@
 		$("#btnStart").click(
 			function(){ 
 
+			showAlert();
+			
 			google.maps.event.addListener(marker, "position_changed", function() {
 				  var position = marker.getPosition();
 				  coordinates.push(position);
@@ -143,7 +162,8 @@
 				  });
 
 				  runPath.setMap(map);					  
-			});			
+			});	
+			
 			/*
 			var x;
 			$.ajax({
