@@ -74,7 +74,8 @@
 			$("#btnStop").click(function(){
 				navigator.geolocation.clearWatch(watchID);
 				google.maps.event.clearListeners(marker, 'position_changed');
-				runPath = null;
+				runPath.setMap(null);
+				coordinates = [];
 				clearTimeout(runTimer);
 				$("#btnStop").closest('.ui-btn').hide();
 				$('#btnStart').closest('.ui-btn').show();
@@ -169,6 +170,7 @@
 		    runTimerCount = (parseInt(runTimerCount) + 1).toString();
 			var temp = runTimerCount.toHHMMSS();
 			$('#timer').html(temp);
+			$('#length').html(google.maps.geometry.spherical.computeLength(runPath.getPath()) + " meters");
 		}		
 	</script>
 </head>
@@ -193,8 +195,9 @@
 			</div>
 			
 			<div style="position:absolute;top:0px;left:0px;width:100%">
-				<div style="margin-left: auto;margin-right: auto;width: 100%;height:100px;background-color: #333333;color:white;text-align:center;font-size:50px">
-					<span id="timer">0:00:00</span>
+				<div style="margin-left: auto;margin-right: auto;width: 100%;background-color: #333333;color:white;text-align:center;font-size:50px">
+					<span id="timer">0:00:00</span><br/>
+					<span id="length">0</span>
 				</div>
 			</div>
 		</div>
