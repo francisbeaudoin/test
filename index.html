@@ -21,6 +21,7 @@
 		var map = null;
 		var marker = null;
 		var runPath = null;
+		var watchID = null;
 		
 		// A $( document ).ready() block.
 		$( document ).ready(function() {
@@ -44,6 +45,10 @@
 			$('#btnStop').closest('.ui-btn').hide();
 
 			$("#btnStart").click(function(){
+			
+				var options = { enableHighAccuracy: true, maximumAge:3000, timeout: 5000 };
+				watchID = navigator.geolocation.watchPosition(onSuccess, onError, options);
+				
 				runTimerCount = '0';
 				runTimer = setInterval(timer, 1000);
 				$("#btnStart").closest('.ui-btn').hide();
@@ -67,6 +72,7 @@
 			});
 			
 			$("#btnStop").click(function(){
+				navigator.geolocation.clearWatch(watchID);
 				google.maps.event.clearListeners(marker, 'position_changed');
 				runPath = null;
 				clearTimeout(runTimer);
@@ -114,6 +120,23 @@
 				});
 			}
 		});
+		
+		// onSuccess Geolocation
+		//
+		function onSuccess(position) {
+			marker.setPosition({ lat: position.coords.latitud , lng: position.coords.longitude });
+		}
+
+		
+		// onError Callback receives a PositionError object
+		//
+		function onError(error) {
+			var element = document.getElementById('error');
+			element.innerHTML = 'code: '    + error.code    + '<br />' +
+								'message: ' + error.message + '<br />' +
+								'<hr />'      + element.innerHTML;
+		}
+		
 		
 		// device APIs are available
 		function onDeviceReady() {
@@ -179,7 +202,7 @@
 	
 	<div data-role="footer" data-position="fixed">
 		<div style="text-align:center">
-			<input id="btnStart" type="button" data-theme="b" value="COMMENCEZ À COURIR"/>
+			<input id="btnStart" type="button" data-theme="b" value="COMMENCEZ A COURIR"/>
 			<input id="btnStop" type="button" data-theme="b" value="ARRETER LA COURSE"/>
 		</div>
 	</div><!-- /footer -->	
