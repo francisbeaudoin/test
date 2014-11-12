@@ -54,29 +54,29 @@
 				$("#btnStart").closest('.ui-btn').hide();
 				$('#btnStop').closest('.ui-btn').show();
 				
-				
-				google.maps.event.addListener(marker, "position_changed", function() {
-					  var position = marker.getPosition();
-					  coordinates.push(position);
-					  
-					  runPath = new google.maps.Polyline({
+				  runPath = new google.maps.Polyline({
 						path: coordinates,
 						geodesic: true,
 						strokeColor: '#FF0000',
 						strokeOpacity: 1.0,
 						strokeWeight: 2
-					  });
-
-					  runPath.setMap(map);					  
+				  });
+				  
+				  runPath.setMap(map);	
+				  
+				google.maps.event.addListener(marker, "position_changed", function() {
+					  var position = marker.getPosition();
+					  coordinates.push(position);
+					  					  
 				});				
 			});
 			
 			$("#btnStop").click(function(){
 				navigator.geolocation.clearWatch(watchID);
 				google.maps.event.clearListeners(marker, 'position_changed');
-				runPath.setMap(null);
-				coordinates = [];
 				clearTimeout(runTimer);
+				runPath.setMap(null);
+				coordinates = [];				
 				$("#btnStop").closest('.ui-btn').hide();
 				$('#btnStart').closest('.ui-btn').show();
 			});			
