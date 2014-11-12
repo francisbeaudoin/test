@@ -42,8 +42,9 @@
     <preference name="disable-cursor"             value="false" />          <!-- blackberry: prevents a mouse-icon/cursor from being displayed on the app -->
     <preference name="android-minSdkVersion"      value="7" />              <!-- android: MIN SDK version supported on the target device. MAX version is blank by default. -->
     <preference name="android-installLocation"    value="auto" />           <!-- android: app install location. 'auto' will choose. 'internalOnly' is device memory. 'preferExternal' is SDCard. -->
+	
 	<preference name="StatusBarOverlaysWebView"   value="false" />          <!-- ios: remove the statusbar overlay -->
-
+	<preference name="StatusBarBackgroundColor"   value="#e9e9e9" />
     <!-- Plugins -->
 	<feature name="Geolocation">
 		<param name="ios-package" value="CDVLocation" />
