@@ -46,6 +46,8 @@
 
 			$("#btnStart").click(function(){
 			
+				coordinates = new Array();
+				
 				var options = { enableHighAccuracy: true, maximumAge:3000, timeout: 5000 };
 				watchID = navigator.geolocation.watchPosition(onSuccess, onError, options);
 				
@@ -53,22 +55,7 @@
 				runTimer = setInterval(timer, 1000);
 				$("#btnStart").closest('.ui-btn').hide();
 				$('#btnStop').closest('.ui-btn').show();
-				
-				  runPath = new google.maps.Polyline({
-						path: coordinates,
-						geodesic: true,
-						strokeColor: '#FF0000',
-						strokeOpacity: 1.0,
-						strokeWeight: 2
-				  });
-				  
-				  runPath.setMap(map);	
-				  
-				google.maps.event.addListener(marker, "position_changed", function() {
-					  var position = marker.getPosition();
-					  coordinates.push(position);
-					  					  
-				});				
+						
 			});
 			
 			$("#btnStop").click(function(){
@@ -119,13 +106,25 @@
 					title: "Greetings!",
 					icon: 'img/gpsCurrentLocationIco.png'
 				});
-			}
+				
+			    runPath = new google.maps.Polyline({
+					path: coordinates,
+					geodesic: true,
+					strokeColor: '#FF0000',
+					strokeOpacity: 1.0,
+					strokeWeight: 2
+			    });		
+				runPath.setMap(map);
+				
+			}	
 		});
 		
 		// onSuccess Geolocation
 		//
 		function onSuccess(position) {
+			console.log("positionChanged");
 			marker.setPosition({ lat: position.coords.latitude , lng: position.coords.longitude });
+			runPath.getPath().push(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
 		}
 
 		
