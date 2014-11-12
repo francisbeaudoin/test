@@ -14,7 +14,8 @@
 		// A $( document ).ready() block.
 		$( document ).ready(function() {
 
-			
+			document.addEventListener("deviceready", onDeviceReady, false);
+
 			var screen = $.mobile.getScreenHeight();
 
 			var header = $(".ui-header").hasClass("ui-header-fixed") ? $(".ui-header").outerHeight()  - 1 : $(".ui-header").outerHeight();
@@ -68,6 +69,14 @@
 				});
 			}
 		});
+		
+		// device APIs are available
+		function onDeviceReady() {
+			window.plugin.backgroundMode.enable();
+			
+			if (window.device.platform === 'iOS' && parseFloat(window.device.version) === 7.0)        
+            StatusBar.overlaysWebView(false);
+		}
 	</script>
 </head>
 
