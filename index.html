@@ -170,7 +170,7 @@
 		    runTimerCount = (parseInt(runTimerCount) + 1).toString();
 			var temp = runTimerCount.toHHMMSS();
 			$('#timer').html(temp);
-			$('#length').html(google.maps.geometry.spherical.computeLength(runPath.getPath()) + " meters");
+			$('#length').html(Math.round(google.maps.geometry.spherical.computeLength(runPath.getPath())) + " meters");
 		}		
 	</script>
 </head>
