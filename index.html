@@ -6,10 +6,7 @@
 
 	<link rel="stylesheet" href="css/jquery.mobile-1.4.5.css" />
 	
-	<style>
-   #wrapper { position: relative; }
-   #over_map { position: absolute; top: 10px; left: 10px; z-index: 99; }
-	</style>
+
 	<script type="text/javascript" charset="utf-8" src="cordova.js"></script>	
 	<script src="js/jquery.min.js"></script>
 	<script src="js/jquery.mobile-1.4.5.js"></script>
@@ -28,17 +25,6 @@
 
 			document.addEventListener("deviceready", onDeviceReady, false);
 
-			var screen = $.mobile.getScreenHeight();
-
-			var header = $(".ui-header").hasClass("ui-header-fixed") ? $(".ui-header").outerHeight()  - 1 : $(".ui-header").outerHeight();
-
-			var footer = $(".ui-footer").hasClass("ui-footer-fixed") ? $(".ui-footer").outerHeight() - 1 : $(".ui-footer").outerHeight();
-
-			/* content div has padding of 1em = 16px (32px top+bottom). This step
-			   can be skipped by subtracting 32px from content var directly. */
-			var contentCurrent = $(".ui-content").outerHeight() - $(".ui-content").height();
-
-			var content = screen - header - footer - contentCurrent;
 
 			$(".ui-content").height(content);
 			
@@ -46,8 +32,6 @@
 
 			$("#btnStart").click(function(){
 			
-				coordinates = new Array();
-				
 				var options = { enableHighAccuracy: true, maximumAge:3000, timeout: 5000 };
 				watchID = navigator.geolocation.watchPosition(onSuccess, onError, options);
 				
@@ -55,15 +39,30 @@
 				runTimer = setInterval(timer, 1000);
 				$("#btnStart").closest('.ui-btn').hide();
 				$('#btnStop').closest('.ui-btn').show();
-						
+				
+				
+				google.maps.event.addListener(marker, "position_changed", function() {
+					  var position = marker.getPosition();
+					  coordinates.push(position);
+					  
+					  runPath = new google.maps.Polyline({
+						path: coordinates,
+						geodesic: true,
+						strokeColor: '#FF0000',
+						strokeOpacity: 1.0,
+						strokeWeight: 2
+					  });
+
+					  runPath.setMap(map);					  
+				});				
 			});
 			
 			$("#btnStop").click(function(){
 				navigator.geolocation.clearWatch(watchID);
 				google.maps.event.clearListeners(marker, 'position_changed');
-				clearTimeout(runTimer);
 				runPath.setMap(null);
-				coordinates = [];				
+				coordinates = [];
+				clearTimeout(runTimer);
 				$("#btnStop").closest('.ui-btn').hide();
 				$('#btnStart').closest('.ui-btn').show();
 			});			
@@ -106,25 +105,14 @@
 					title: "Greetings!",
 					icon: 'img/gpsCurrentLocationIco.png'
 				});
-				
-			    runPath = new google.maps.Polyline({
-					path: coordinates,
-					geodesic: true,
-					strokeColor: '#FF0000',
-					strokeOpacity: 1.0,
-					strokeWeight: 2
-			    });		
-				runPath.setMap(map);
-				
-			}	
+			}
+			
 		});
 		
 		// onSuccess Geolocation
 		//
 		function onSuccess(position) {
-			console.log("positionChanged");
 			marker.setPosition({ lat: position.coords.latitude , lng: position.coords.longitude });
-			runPath.getPath().push(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
 		}
 
 		
@@ -170,7 +158,23 @@
 			var temp = runTimerCount.toHHMMSS();
 			$('#timer').html(temp);
 			$('#length').html(Math.round(google.maps.geometry.spherical.computeLength(runPath.getPath())) + " meters");
-		}		
+		}	
+
+		function contentHeight() {
+			var screen = $.mobile.getScreenHeight(),
+				header = $(".ui-header").hasClass("ui-header-fixed") ? $(".ui-header").outerHeight() - 1 : $(".ui-header").outerHeight(),
+				footer = $(".ui-footer").hasClass("ui-footer-fixed") ? $(".ui-footer").outerHeight() - 1 : $(".ui-footer").outerHeight(),
+				/* content div has padding of 1em = 16px (32px top+bottom). This step
+		   can be skipped by subtracting 32px from content var directly. */
+				contentCurrent = $(".ui-content").outerHeight() - $(".ui-content").height(),
+				content = screen - header - footer - contentCurrent;
+			/* apply result */
+			$(".ui-content").height(content);
+		}
+		
+		$(document).on("pagecontainertransition", contentHeight);
+		$(window).on("throttledresize orientationchange", contentHeight);
+		
 	</script>
 </head>
 
@@ -178,30 +182,56 @@
 
 <div data-role="page" id="map-page" data-url="map-page">
 
-	<div data-role="header" > 
+	<div data-role="header"> 
 		<a href="#mypanel" data-role="button" data-icon="bars" data-iconpos="notext"></a>
-		<h1>APP TITLE</h1>
+		<h1>RUN</h1>
 	</div><!-- /header -->
 	
 	<div data-role="panel" id="mypanel" style="background-color:#222222">
         <!-- panel content goes here -->
     </div><!-- /panel -->
 	
-    <div role="main" class="ui-content" style="padding: 0px !important">
-		<div style="height:100%;position:relative">
-			<div id="map-canvas" style="height:100%">
+	<div role="main" class="ui-content" style="padding: 0px !important">
+		<div style="height:100%;position:relative;background-color:#222222">
+			<div id="map-canvas" style="height:35%">
 			
 			</div>
-			
-			<div style="position:absolute;top:0px;left:0px;width:100%">
-				<div style="margin-left: auto;margin-right: auto;width: 100%;background-color: #333333;color:white;text-align:center;font-size:50px">
-					<span id="timer">0:00:00</span><br/>
-					<span id="length">0</span>
+			<div style="text-shadow:0 0 0;">
+				<div style="text-align:center;color:#ffffff">
+					<span style="font-size:6em">7.00</span><span style="font-size:2em;text-transform:uppercase;color:#00aeef">KM</span>
+				</div>
+				
+				<div style="width:50%;float:left">
+					<div style="float:right;margin-right:4%">
+						<div style="width:100%;text-align:right">
+							<span style="color:#aaaaaa;font-size:0.7em;text-transform:uppercase;">RUN TIME</span>
+						</div>
+						<div style="margin-top:-10px">
+							<img src="img/run-time.png" style="display:block;float:left;margin-top:7px;margin-right:10px"/>
+							<span style="color:#ffffff;font-size:2em;text-align:right;display:block;float:left">0:41:29</span>
+						</div>
+					</div>
+				</div>
+				<div style="width:50%;float:left">
+					<div style="margin-left:2%">
+						<div style="margin-left:82px">
+							<span style="color:#aaaaaa;font-size:0.7em;text-transform:uppercase;">PACE TIME</span>
+						</div>
+						<div style="margin-top:-10px;background-color:red;width:100%">
+							<img src="img/pace-time.png" style="display:block;float:left;margin-top:7px;margin-right:10px"/>
+							<span style="color:#ffffff;font-size:2em;text-align:right;display:block;float:left">0:41:29</span>
+						</div>
+					</div>
+				</div>
+				
+				<div style="text-align:center;margin-top:100px">
+					<img src="img/btnGoRunning.jpg" />	
 				</div>
 			</div>
 		</div>
     </div>
 	
+	<!--
 	<div data-role="footer" data-position="fixed">
 		<div style="text-align:center">
 			<input id="btnStart" type="button" data-theme="b" value="COMMENCEZ A COURIR"/>
