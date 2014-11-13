@@ -25,11 +25,6 @@
 
 			document.addEventListener("deviceready", onDeviceReady, false);
 
-
-			$(".ui-content").height(content);
-			
-			$('#btnStop').closest('.ui-btn').hide();
-
 			$("#btnStart").click(function(){
 			
 				var options = { enableHighAccuracy: true, maximumAge:3000, timeout: 5000 };
@@ -37,10 +32,6 @@
 				
 				runTimerCount = '0';
 				runTimer = setInterval(timer, 1000);
-				$("#btnStart").closest('.ui-btn').hide();
-				$('#btnStop').closest('.ui-btn').show();
-				
-				
 				google.maps.event.addListener(marker, "position_changed", function() {
 					  var position = marker.getPosition();
 					  coordinates.push(position);
@@ -63,8 +54,6 @@
 				runPath.setMap(null);
 				coordinates = [];
 				clearTimeout(runTimer);
-				$("#btnStop").closest('.ui-btn').hide();
-				$('#btnStart').closest('.ui-btn').show();
 			});			
 		
 		});
@@ -157,7 +146,8 @@
 		    runTimerCount = (parseInt(runTimerCount) + 1).toString();
 			var temp = runTimerCount.toHHMMSS();
 			$('#timer').html(temp);
-			$('#length').html(Math.round(google.maps.geometry.spherical.computeLength(runPath.getPath())) + " meters");
+			$('#length').html(Math.round(google.maps.geometry.spherical.computeLength(runPath.getPath())));
+			$('#pace').html("0:00:00");
 		}	
 
 		function contentHeight() {
@@ -198,7 +188,7 @@
 			</div>
 			<div style="text-shadow:0 0 0;">
 				<div style="text-align:center;color:#ffffff">
-					<span style="font-size:6em">7.00</span><span style="font-size:2em;text-transform:uppercase;color:#00aeef">KM</span>
+					<span style="font-size:6em" id="length">7.00</span><span style="font-size:2em;text-transform:uppercase;color:#00aeef">KM</span>
 				</div>
 				
 				<div style="width:50%;float:left">
@@ -208,7 +198,7 @@
 						</div>
 						<div style="margin-top:-10px">
 							<img src="img/run-time.png" style="display:block;float:left;margin-top:7px;margin-right:10px"/>
-							<span style="color:#ffffff;font-size:2em;text-align:right;display:block;float:left">0:41:29</span>
+							<span style="color:#ffffff;font-size:2em;text-align:right;display:block;float:left" id="timer">0:00:00</span>
 						</div>
 					</div>
 				</div>
@@ -219,14 +209,18 @@
 						</div>
 						<div style="margin-top:-10px;background-color:red;width:100%">
 							<img src="img/pace-time.png" style="display:block;float:left;margin-top:7px;margin-right:10px"/>
-							<span style="color:#ffffff;font-size:2em;text-align:right;display:block;float:left">0:41:29</span>
+							<span style="color:#ffffff;font-size:2em;text-align:right;display:block;float:left" id="pace">0:00:00</span>
 						</div>
 					</div>
 				</div>
 				
 				<div style="text-align:center;margin-top:100px">
-					<img src="img/btnGoRunning.jpg" />	
+					<a id="btnStart" href="#">
+						<img  src="img/btnGoRunning.jpg" />	
+					</a>
 				</div>
+				
+				<div id="error"></div>
 			</div>
 		</div>
     </div>
