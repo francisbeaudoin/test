@@ -146,7 +146,7 @@
 		    runTimerCount = (parseInt(runTimerCount) + 1).toString();
 			var temp = runTimerCount.toHHMMSS();
 			$('#timer').html(temp);
-			$('#length').html(Math.round(google.maps.geometry.spherical.computeLength(runPath.getPath())));
+			$('#length').html(Math.round(google.maps.geometry.spherical.computeLength(runPath.getPath())) / 1000);
 			$('#pace').html("0:00:00");
 		}	
 
@@ -188,17 +188,17 @@
 			</div>
 			<div style="text-shadow:0 0 0;">
 				<div style="text-align:center;color:#ffffff">
-					<span style="font-size:6em" id="length">7.00</span><span style="font-size:2em;text-transform:uppercase;color:#00aeef">KM</span>
+					<span style="font-size:6em" id="length">0.00</span><span style="font-size:2em;text-transform:uppercase;color:#00aeef">KM</span>
 				</div>
 				
 				<div style="width:50%;float:left">
-					<div style="float:right;margin-right:4%">
+					<div style="float:right;margin-right:2%">
 						<div style="width:100%;text-align:right">
 							<span style="color:#aaaaaa;font-size:0.7em;text-transform:uppercase;">RUN TIME</span>
 						</div>
 						<div style="margin-top:-10px">
 							<img src="img/run-time.png" style="display:block;float:left;margin-top:7px;margin-right:10px"/>
-							<span style="color:#ffffff;font-size:2em;text-align:right;display:block;float:left" id="timer">0:00:00</span>
+							<span style="color:#ffffff;font-size:2em;text-align:right;display:block;float:left" id="timer">0:00:17</span>
 						</div>
 					</div>
 				</div>
@@ -208,7 +208,7 @@
 							<span style="color:#aaaaaa;font-size:0.7em;text-transform:uppercase;">PACE TIME</span>
 						</div>
 						<div style="margin-top:-10px;background-color:red;width:100%">
-							<img src="img/pace-time.png" style="display:block;float:left;margin-top:7px;margin-right:10px"/>
+							<img src="img/pace-time.png" style="display:block;float:left;margin-top:7px;margin-right:5px"/>
 							<span style="color:#ffffff;font-size:2em;text-align:right;display:block;float:left" id="pace">0:00:00</span>
 						</div>
 					</div>
