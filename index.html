@@ -20,8 +20,28 @@
 		var runPath = null;
 		var watchID = null;
 		
+			function connect(e)
+			{
+			var term= {button:e};
+			$.ajax({
+			url:'http://fbsolutions.ca/new/test.php',
+			type:'GET',
+			data:term,
+			dataType:'json',
+			error:function(jqXHR,text_status,strError){
+			alert("no connection");},
+			timeout:60000,
+			success:function(data){
+			$("#result").html("");
+			for(var i in data){
+			$("#result").append("<li>"+data[i]+"</li>");
+			}
+			}
+			});}	
+			
 		// A $( document ).ready() block.
 		$( document ).ready(function() {
+		
 
 			document.addEventListener("deviceready", onDeviceReady, false);
 
@@ -164,7 +184,7 @@
 		
 		$(document).on("pagecontainertransition", contentHeight);
 		$(window).on("throttledresize orientationchange", contentHeight);
-		
+			
 	</script>
 </head>
 
@@ -178,7 +198,12 @@
 	</div><!-- /header -->
 	
 	<div data-role="panel" id="mypanel" style="background-color:#222222">
-        <!-- panel content goes here -->
+	
+		<center><b>Bikes or Cars</b></center>
+		<center><input onclick="connect(this.value)" type="button" value="cars" /></center>
+		<center><input onclick="connect(this.value)" type="button" value="bikes" /></center>
+		<center><b>Results</b></center>
+		<ul id="result"></ul>
     </div><!-- /panel -->
 	
 	<div role="main" class="ui-content" style="padding: 0px !important">
